@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab3 - Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="py-4 text-center">
+        <button class="btn btn-success" id="load">Load profiles</button>
+    </div>
+    <div id="user-cards" class="row"></div>
+</div>
+<script>
+    function fetchUsers() {
+        fetch('https://randomuser.me/api/?results=16')
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach(user => {
+                    const cardHtml = `
+                        <div class="col-md-3">
+                            <div class="card">
+                                <img src="${user.picture.large}" class="card-img-top" alt="User Picture">
+                                <div class="card-body">
+                                    <h5 class="card-title">${user.name.first} ${user.name.last}</h5>
+                                    <p class="card-text">Cell: ${user.cell}</p>
+                                    <p class="card-text">City: ${user.location.city}</p>
+                                    <p class="card-text">Email: ${user.email}</p>
+                                    <p class="card-text">Coordinates: ${user.location.coordinates.latitude}, ${user.location.coordinates.longitude}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('user-cards').insertAdjacentHTML('beforeend', cardHtml);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    window.onscroll = function () {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            fetchUsers();
+        }
+    };
+    document.querySelector('#load').onclick = function () {
+        fetchUsers();
+    }
+</script>
+</body>
+</html>
